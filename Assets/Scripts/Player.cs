@@ -42,4 +42,9 @@ public class Player : MonoBehaviour
     {
         inputVec = value.Get<Vector2>();
     }
+
+    public Vector2 GetPlayerDir()
+    {
+        return inputVec;
+    }
 }

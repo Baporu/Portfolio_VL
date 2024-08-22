@@ -18,8 +18,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    [Header("Player")]
+    //[Header("Player")]
     public Player       player;
+    public PoolManager  poolManager;
+
+    [Header("Game System")]
+    public float gameTime;
+    public float maxGameTime = 2 * 10f;
+
 
     private void Awake()
     {
@@ -36,4 +42,15 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    private void Update()
+    {
+        gameTime += Time.deltaTime;
+
+        if (gameTime > maxGameTime)
+        {
+            gameTime = maxGameTime;
+        }
+    }
+
 }
