@@ -18,13 +18,19 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    //[Header("Player")]
+    [Header("Game System")]
+    public float    gameTime;
+    public float    maxGameTime = 2 * 10f;
+
+    [Header("Player Info")]
+    public int      level;
+    public int      kill;
+    public int      exp;
+    public int[]    nextExp = { 3, 5, 10, 100, 150, 210, 280, 360, 450, 550 };
+
+    [Header("Game Object")]
     public Player       player;
     public PoolManager  poolManager;
-
-    [Header("Game System")]
-    public float gameTime;
-    public float maxGameTime = 2 * 10f;
 
 
     private void Awake()
@@ -50,6 +56,17 @@ public class GameManager : MonoBehaviour
         if (gameTime > maxGameTime)
         {
             gameTime = maxGameTime;
+        }
+    }
+
+    public void GetExp()
+    {
+        exp++;
+
+        if (exp == nextExp[level])
+        {
+            level++;
+            exp = 0;
         }
     }
 
