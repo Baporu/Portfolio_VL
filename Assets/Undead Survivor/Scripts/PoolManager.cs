@@ -4,10 +4,8 @@ using UnityEngine;
 
 public class PoolManager : MonoBehaviour
 {
-    private List<GameObject>[]  pools;
-
-    [SerializeField]
-    private GameObject[]        prefabs;
+    public List<GameObject>[]  pools;
+    public GameObject[]        prefabs;
 
 
     private void Awake()

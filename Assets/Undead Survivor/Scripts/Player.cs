@@ -11,7 +11,8 @@ public class Player : MonoBehaviour
 
     private Vector2 inputVec;
 
-    public Scanner scanner;
+    public Scanner  scanner;
+    public Hand[]   hands;
     
     public float speed = 1.0f;
 
@@ -21,6 +22,7 @@ public class Player : MonoBehaviour
         spriter = GetComponent<SpriteRenderer>();
         anim    = GetComponent<Animator>();
         scanner = GetComponent<Scanner>();
+        hands   = GetComponentsInChildren<Hand>(true);
     }
 
     // 물리 연산 프레임 이후 작동
