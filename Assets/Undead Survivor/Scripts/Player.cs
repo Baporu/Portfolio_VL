@@ -28,6 +28,9 @@ public class Player : MonoBehaviour
     // 물리 연산 프레임 이후 작동
     private void FixedUpdate()
     {
+        if (!GameManager.Instance.isLive)
+            return;
+
         // deltaTime 말고 fixedDeltaTime을 써줘야하는 것 유의
         Vector2 nextVec = inputVec.normalized * speed * Time.fixedDeltaTime;
         rigid.MovePosition(rigid.position + nextVec);
@@ -36,6 +39,9 @@ public class Player : MonoBehaviour
     // Update 이후에 작동
     private void LateUpdate()
     {
+        if (!GameManager.Instance.isLive)
+            return;
+
         anim.SetFloat("Speed", inputVec.magnitude);
 
         if (inputVec.x != 0)
