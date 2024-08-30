@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
 
     public Scanner  scanner;
     public Hand[]   hands;
+    public RuntimeAnimatorController[] animCon;
     
     public float speed = 1.0f;
 
@@ -23,6 +24,12 @@ public class Player : MonoBehaviour
         anim    = GetComponent<Animator>();
         scanner = GetComponent<Scanner>();
         hands   = GetComponentsInChildren<Hand>(true);
+    }
+
+    private void OnEnable()
+    {
+        speed *= Character.Speed;
+        anim.runtimeAnimatorController = animCon[GameManager.Instance.playerId];
     }
 
     // 물리 연산 프레임 이후 작동
@@ -57,5 +64,24 @@ public class Player : MonoBehaviour
     public Vector2 GetPlayerDir()
     {
         return inputVec;
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (!GameManager.Instance.isLive)
+            return;
+
+        GameManager.Instance.health -= Time.deltaTime * 20;
+
+        if (GameManager.Instance.health < 0)
+        {
+            for (int index = 0; index < transform.childCount; index++)
+            {
+                transform.GetChild(index).gameObject.SetActive(false);
+            }
+
+            anim.SetTrigger("Dead");
+            GameManager.Instance.GameOver();
+        }
     }
 }

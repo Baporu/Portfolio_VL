@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -24,8 +25,9 @@ public class GameManager : MonoBehaviour
     public float    maxGameTime = 2 * 10f;
 
     [Header("Player Info")]
-    public int      health;
-    public int      maxHealth = 100;
+    public int      playerId;
+    public float    health;
+    public float    maxHealth = 100f;
 
     public int      level;
     public int      kill;
@@ -36,11 +38,15 @@ public class GameManager : MonoBehaviour
     public Player       player;
     public PoolManager  poolManager;
     public LevelUp      uiLevelUP;
+    public Result       uiResult;
+    public GameObject   enemyCleaner;
 
 
     private void Awake()
     {
-        // Singleton 패턴 구현
+        /*
+        // Singleton 패턴 구현이었는데 재시작 구조 상 에러가 났고,
+        // 동적 연결을 하자니 굳이 이 게임에 필요하지 않을 것 같아 주석 처리함
         if (instance == null)
         {
             instance = this;
@@ -52,11 +58,57 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        */
+
+        instance = this;
     }
 
-    private void Start()
+    public void GameStart(int id)
     {
+        playerId = id;
         health = maxHealth;
+
+        player.gameObject.SetActive(true);
+        uiLevelUP.Select(playerId % 2);
+        Resume();
+    }
+
+    public void GameOver()
+    {
+        StartCoroutine(GameOverRoutine());
+    }
+
+    IEnumerator GameOverRoutine()
+    {
+        isLive = false;
+
+        yield return new WaitForSeconds(0.5f);
+
+        uiResult.gameObject.SetActive(true);
+        uiResult.Lose();
+        Stop();
+    }
+
+    public void GameVictory()
+    {
+        StartCoroutine(GameVictoryRoutine());
+    }
+
+    IEnumerator GameVictoryRoutine()
+    {
+        isLive = false;
+        enemyCleaner.SetActive(true);
+
+        yield return new WaitForSeconds(0.5f);
+
+        uiResult.gameObject.SetActive(true);
+        uiResult.Win();
+        Stop();
+    }
+
+    public void GameRetry()
+    {
+        SceneManager.LoadScene(0);
     }
 
     private void Update()
@@ -69,11 +121,16 @@ public class GameManager : MonoBehaviour
         if (gameTime > maxGameTime)
         {
             gameTime = maxGameTime;
+            GameVictory();
         }
     }
 
     public void GetExp()
     {
+        // 게임 클리어 연출로 몹을 잡았을 때 경험치가 나오지 않게 하기 위함
+        if (!isLive)
+            return;
+
         exp++;
 
         if (exp == nextExp[Mathf.Min(level, nextExp.Length - 1)])
