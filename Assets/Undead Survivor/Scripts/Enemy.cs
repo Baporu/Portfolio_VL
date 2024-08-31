@@ -90,6 +90,8 @@ public class Enemy : MonoBehaviour
         if (health > 0)
         {
             anim.SetTrigger("Hit");
+
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.Hit);
         }
         else
         {
@@ -104,6 +106,10 @@ public class Enemy : MonoBehaviour
 
             GameManager.Instance.kill++;
             GameManager.Instance.GetExp();
+
+            // 게임이 끝날 때 적이 죽어 사운드가 겹치는 일 방지
+            if (GameManager.Instance.isLive)
+                AudioManager.instance.PlaySfx(AudioManager.Sfx.Dead);
         }
     }
 

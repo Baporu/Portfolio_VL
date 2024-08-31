@@ -20,7 +20,7 @@ public class Bullet : MonoBehaviour
         this.damage = damage;
         this.penet = penet;
 
-        if (penet > -1)
+        if (penet >= 0)
         {
             rigid.velocity = dir * 15f;
         }
@@ -28,12 +28,12 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!collision.CompareTag("Enemy") || penet == -1)
+        if (!collision.CompareTag("Enemy") || penet == -100)
             return;
 
         penet--;
 
-        if (penet == -1)
+        if (penet < 0)
         {
             rigid.velocity = Vector2.zero;
             gameObject.SetActive(false);
@@ -42,11 +42,10 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("Area"))
-        {
-            rigid.velocity = Vector2.zero;
-            gameObject.SetActive(false);
-        }
+        if (!collision.CompareTag("Area") || penet == -100)
+            return;
+
+        gameObject.SetActive(false);
     }
 
 }

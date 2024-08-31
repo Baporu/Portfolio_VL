@@ -52,14 +52,9 @@ public class Reposition : MonoBehaviour
             case "Enemy":
                 if (coll.enabled)
                 {
-                    if (diffX > diffY)
-                    {
-                        transform.Translate(Vector3.right * dirX * 20 + new Vector3(Random.Range(-3f, 3f), Random.Range(-3f, 3f), 0f));
-                    }
-                    else if (diffX < diffY)
-                    {
-                        transform.Translate(Vector3.up * dirY * 20 + new Vector3(Random.Range(-3f, 3f), Random.Range(-3f, 3f), 0f));
-                    }
+                    Vector3 dist    = playerPos - myPos;
+                    Vector3 ran     = new Vector3(Random.Range(-3, 3), Random.Range(-3, 3), 0);
+                    transform.Translate(ran + dist * 2);
                 }
 
                 break;

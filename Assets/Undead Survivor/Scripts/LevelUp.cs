@@ -5,7 +5,7 @@ using UnityEngine;
 public class LevelUp : MonoBehaviour
 {
     private RectTransform   rect;
-    private Item[]          items;
+    public Item[]          items;
 
 
     private void Awake()
@@ -19,12 +19,18 @@ public class LevelUp : MonoBehaviour
         Next();
         rect.localScale = Vector3.one;
         GameManager.Instance.Stop();
+
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.LevelUp);
+        AudioManager.instance.EffectBgm(true);
     }
 
     public void Hide()
     {
         rect.localScale = Vector3.zero;
         GameManager.Instance.Resume();
+
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
+        AudioManager.instance.EffectBgm(false);
     }
 
     public void Select(int index)

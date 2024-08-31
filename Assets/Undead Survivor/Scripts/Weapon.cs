@@ -31,7 +31,7 @@ public class Weapon : MonoBehaviour
         // Property 설정
         id      = data.itemId;
         damage  = data.baseDamage * Character.Damage;
-        count   = data.baseCount * Character.Count;
+        count   = data.baseCount + Character.Count;
 
         for (int index = 0; index < GameManager.Instance.poolManager.prefabs.Length; index++)
         {
@@ -87,10 +87,6 @@ public class Weapon : MonoBehaviour
 
                 break;
         }
-
-        // Test Code
-        if (Input.GetButtonDown("Jump"))
-            LevelUp(5, 1);
     }
 
     private void Place()
@@ -121,7 +117,9 @@ public class Weapon : MonoBehaviour
             bullet.Rotate(rotVec);
             bullet.Translate(bullet.up * 1.4f, Space.World);
 
-            bullet.GetComponent<Bullet>().Init(damage, -1, Vector3.zero); // -1 is Infinite penet.
+            bullet.GetComponent<Bullet>().Init(damage, -100, Vector3.zero); // -100 is Infinite penet.
+
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.Melee);
         }
     }
 
@@ -153,5 +151,7 @@ public class Weapon : MonoBehaviour
         // Y축을 기준으로 dir만큼 회전
         bullet.rotation     = Quaternion.FromToRotation(Vector3.up, dir);
         bullet.GetComponent<Bullet>().Init(damage, count, dir);
+
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Range);
     }
 }
